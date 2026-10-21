@@ -2,6 +2,7 @@
 
 ## 0.1.0 (2026-10-21)
 
+- Archived on Zenodo: version DOI [10.5281/zenodo.23530281](https://doi.org/10.5281/zenodo.23530281), concept DOI [10.5281/zenodo.23530280](https://doi.org/10.5281/zenodo.23530280).
 - First commit: the package exactly as received (`spec/`).
 - Authorship: Jean-François Brisson. Mun Seok Lee is credited in the acknowledgements only.
 - Wording: "collapse" is now "projection onto the stored subspace". With orthonormal patterns W is a projector, so recall reaches its fixed point in one step and the recalled fidelity equals the Born weight; both are measured and tested. The default `recall` is now one step (was 25).
