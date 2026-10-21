@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata from this file."
+title: "Quantum Projection: amplitude-encoded statevectors projected onto a stored subspace (SYNTHETIC classical emulation)"
+type: software
+authors:
+  - family-names: "Brisson"
+    given-names: "Jean-François"
+    orcid: "https://orcid.org/0009-0000-9778-5374"
+    affiliation: "Spark AI NLP, Fredericton, New Brunswick, Canada"
+version: 0.1.0
+license: AGPL-3.0-only
+repository-code: "https://github.com/sparkainlp-x/quantum-projection"
+abstract: >-
+  SYNTHETIC. Standard-library Python classical emulation of quantum
+  kinematics: amplitude-encoded statevectors stored in a complex
+  outer-product memory, overlap-based projection onto the stored subspace,
+  and lossy Haar coarse-graining (equivalent to projecting one qubit onto
+  |+>). With orthonormal patterns the memory is a projector and recall
+  reaches its fixed point in one step; with non-orthogonal patterns repeated
+  recall drifts to the dominant eigenvector. Includes 200-seed sweeps with
+  unstored and random controls. No speedup, no Bell violation, no hardware
+  data.
+keywords:
+  - "quantum-kinematics"
+  - "statevector"
+  - "holographic-memory"
+  - "complex-hopfield"
+  - "born-rule"
+  - "coarse-graining"
+  - "synthetic"
+  - "python"

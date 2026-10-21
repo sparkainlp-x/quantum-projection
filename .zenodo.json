@@ -1,0 +1,42 @@
+{
+  "title": "Quantum Projection: amplitude-encoded statevectors projected onto a stored subspace (SYNTHETIC classical emulation)",
+  "version": "0.1.0",
+  "upload_type": "software",
+  "description": "<p>SYNTHETIC. Standard-library Python classical emulation of quantum kinematics: amplitude-encoded statevectors stored in a complex outer-product memory, overlap-based projection onto the stored subspace, and lossy Haar coarse-graining (equivalent to projecting one qubit onto |+&gt;). With orthonormal patterns the memory is a projector and recall reaches its fixed point in one step, with recalled fidelity equal to the Born weight; with non-orthogonal patterns repeated recall drifts to the dominant eigenvector. Includes 200-seed sweeps with unstored and random controls. No speedup, no Bell violation, no hardware data.</p><p>Acknowledgement: Mun Seok Lee, credited on the original package kept in spec/. No endorsement implied.</p>",
+  "creators": [
+    {
+      "name": "Brisson, Jean-François",
+      "orcid": "0009-0000-9778-5374",
+      "affiliation": "Spark AI NLP, Fredericton, New Brunswick, Canada"
+    }
+  ],
+  "license": "AGPL-3.0-only",
+  "access_right": "open",
+  "language": "eng",
+  "keywords": [
+    "quantum kinematics",
+    "statevector",
+    "holographic memory",
+    "complex Hopfield",
+    "Born rule",
+    "coarse-graining",
+    "synthetic",
+    "Python"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/sparkainlp-x/quantum-projection",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ],
+  "references": [
+    "Nielsen, M. A., and Chuang, I. L. (2010). Quantum Computation and Quantum Information: 10th Anniversary Edition. Cambridge University Press. https://doi.org/10.1017/CBO9780511976667",
+    "Hopfield, J. J. (1982). Neural networks and physical systems with emergent collective computational abilities. Proceedings of the National Academy of Sciences, 79(8), 2554-2558. https://doi.org/10.1073/pnas.79.8.2554"
+  ],
+  "communities": [
+    {
+      "identifier": "spark-ai-nlp"
+    }
+  ]
+}
