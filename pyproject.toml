@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quantum-projection"
+version = "0.1.0"
+description = "SYNTHETIC classical emulation: amplitude-encoded statevectors projected onto a stored subspace (standard library only)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "AGPL-3.0-only"}
+authors = [{name = "Jean-François Brisson"}]
+dependencies = []
+
+[project.scripts]
+quantum-projection = "quantum_projection.__main__:main"
+
+[tool.setuptools]
+packages = ["quantum_projection"]
