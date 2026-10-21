@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+title: Quantum Projection
+version: 0.1.0
+date-released: 2026-10-21
+authors:
+  - family-names: Lee
+    given-names: Mun Seok
+license: AGPL-3.0-only
+repository-code: https://github.com/sparkainlp-x
+abstract: >-
+  Projection of quantum statevectors into a complex-amplitude
+  holographic membrane: amplitude encoding of n-qubit states,
+  outer-product holographic storage, projective measurement as the
+  membrane's native recall operation with Born-like outcome
+  probabilities, ket/bra split across two conjugate membranes, and
+  lossy Haar coarse-graining. Verified: Bell-state projection under
+  noise, non-orthogonal pattern resolution, coarse-grained GHZ
+  recall. Classical emulation of quantum kinematics only; no
+  speedup, no nonlocality.
+keywords:
+  - quantum-projection
+  - holographic-memory
+  - complex-hopfield
+  - born-rule
+  - coarse-graining
+  - wave-computing
