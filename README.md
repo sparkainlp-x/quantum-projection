@@ -1,5 +1,7 @@
 # Quantum Projection
 
+**Live demo:** [Holographic Thoughts](https://sparkainlp-x.github.io/holographic-thoughts/) (interactive browser view; synthetic, classical simulation; measured numbers are in this repo)
+
 Software DOI for v0.1.0: [10.5281/zenodo.23530281](https://doi.org/10.5281/zenodo.23530281) (all versions: [10.5281/zenodo.23530280](https://doi.org/10.5281/zenodo.23530280)).
 
 A small, standard-library Python package that stores amplitude-encoded statevectors in a complex outer-product memory and projects probe states onto the stored subspace.
