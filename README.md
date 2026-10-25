@@ -93,11 +93,11 @@ Iterating erases the distinction: for noisy |00⟩ at σ = 0.25, 25-step recall 
 
 ## Provenance
 
-The package as received is kept unchanged in [spec/](spec/). [CHANGELOG.md](CHANGELOG.md) lists what changed.
+A package received under Mun Seok Lee's name, which lists him as sole author under AGPL-3.0-only, is kept unchanged in [spec/](spec/). We could not independently verify who wrote it. The main code in this repository is derived from it. `quantum_projection/qsim.py` is about 37% line-similar to the received `qsim.py`, and `quantum_projection/membrane.py`, the closest match to the received `qmembrane.py`, is about 31% similar. The sweeps, command-line entry point, packaging and tests were added by this project. Line similarity here comes from a plain diff, not from a review of intent. [CHANGELOG.md](CHANGELOG.md) lists the changes. Mun Seok Lee is not an author of this release, and he has not reviewed or endorsed this software.
 
 ## Acknowledgements
 
-Thanks to Mun Seok Lee, who is credited on the original package kept in [spec/](spec/). The acknowledgement does not imply his endorsement of this code or its conclusions.
+Thanks to Mun Seok Lee for the package received under his name (see Provenance above). This is an acknowledgement only: it implies no endorsement of this code or its conclusions.
 
 ## How to cite
 
