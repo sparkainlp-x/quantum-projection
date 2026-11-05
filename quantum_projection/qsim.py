@@ -7,6 +7,7 @@ the least-significant bit of the basis index.
 
 import cmath
 import math
+import numbers
 import random
 
 SQRT1_2 = 1.0 / math.sqrt(2.0)
@@ -27,6 +28,35 @@ def _check_qubit(state, q):
     n = _num_qubits(state)
     if not isinstance(q, int) or isinstance(q, bool) or not 0 <= q < n:
         raise ValueError(f"qubit index {q!r} out of range for {n} qubits")
+
+
+def _check_finite_statevector(state):
+    """Validate a finite numeric vector with a power-of-two dimension."""
+    _num_qubits(state)
+    try:
+        valid = all(not isinstance(c, bool) and isinstance(c, numbers.Number)
+                    and cmath.isfinite(complex(c)) for c in state)
+    except (OverflowError, TypeError, ValueError):
+        valid = False
+    if not valid:
+        raise ValueError("statevector entries must be finite numbers")
+
+
+def _check_angle(theta):
+    try:
+        valid = (not isinstance(theta, bool) and isinstance(theta, numbers.Real)
+                 and math.isfinite(theta))
+    except (OverflowError, TypeError, ValueError):
+        valid = False
+    if not valid:
+        raise ValueError("angle must be a finite real number")
+
+
+def rz(theta):
+    """Return RZ(theta) = diag(exp(-i theta/2), exp(i theta/2))."""
+    _check_angle(theta)
+    return ((cmath.exp(-0.5j * theta), 0j),
+            (0j, cmath.exp(0.5j * theta)))
 
 
 def norm(v):
@@ -95,6 +125,27 @@ def apply_cnot(state, control, target):
             j = i | (1 << target)
             out[i], out[j] = state[j], state[i]
     return out
+
+
+def apply_rzz(state, q0, q1, theta):
+    """Apply RZZ(theta) without normalization or input mutation.
+
+    Qubit 0 is the least-significant basis-index bit. Any finite numeric
+    power-of-two vector is accepted, including an unnormalized vector.
+    """
+    _check_finite_statevector(state)
+    _check_qubit(state, q0)
+    _check_qubit(state, q1)
+    if q0 == q1:
+        raise ValueError("qubits must differ")
+    _check_angle(theta)
+    equal_phase = cmath.exp(-0.5j * theta)
+    unequal_phase = cmath.exp(0.5j * theta)
+    return [
+        amplitude * (equal_phase if ((index >> q0) & 1) == ((index >> q1) & 1)
+                     else unequal_phase)
+        for index, amplitude in enumerate(state)
+    ]
 
 
 def bell_phi_plus():
