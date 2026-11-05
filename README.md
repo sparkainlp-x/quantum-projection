@@ -21,18 +21,97 @@ A small, standard-library Python package that stores amplitude-encoded statevect
 
 ```bash
 python -m quantum_projection                  # prints the sweep tables (200 seeds per cell)
-pip install -r requirements-dev.txt && python -m pytest   # 65 tests, warnings are errors
+pip install -r requirements-dev.txt && python -m pytest   # tests, warnings are errors
+python -m quantum_projection.control --seed 2026  # paired control; strict JSON
 ```
 
 ```python
-from quantum_projection import HolographicMembrane, bell_phi_plus, bell_phi_minus, bell_psi_plus, noisy
+from quantum_projection import (HolographicMembrane, apply_rzz, bell_phi_plus,
+                                bell_phi_minus, bell_psi_plus, noisy)
 
 mem = HolographicMembrane([bell_phi_plus(), bell_phi_minus(), bell_psi_plus()])
 r = mem.project(noisy(bell_phi_plus(), 0.25, seed=11))
 r["winner"], r["probs"][0]        # 0, 0.8719
+apply_rzz(bell_phi_plus(), 0, 1, 0.4)  # finite, unnormalized vectors are accepted
 ```
 
 Invalid input (empty pattern list, mismatched lengths, zero-norm or non-finite vectors, a probe orthogonal to every pattern in `recall`, a bad qubit index) raises `ValueError`.
+
+## ZZ rotations and bounded control
+
+Qubit 0 is the least-significant basis-index bit. An n-qubit vector is ordered
+as \(|q_{n-1}\ldots q_0\rangle\); its two-qubit order is
+\((|00\rangle,|01\rangle,|10\rangle,|11\rangle)\). `rz(theta)` returns
+\(\operatorname{diag}(e^{-i\theta/2},e^{+i\theta/2})\), and
+`apply_rzz(state, q0, q1, theta)` applies the parity-dependent phases
+\(e^{-i\theta/2}\) for equal bits and \(e^{+i\theta/2}\) for unequal bits.
+Angles must be finite real numbers (booleans and strings are rejected);
+qubits must be distinct valid integers; statevectors must be finite numeric
+vectors with power-of-two length. The operation does not mutate or silently
+normalize the vector. Unnormalized finite vectors are accepted as
+linear-algebra inputs. The convention and matrix are consistent with
+[IBM's RZZGate reference](https://quantum.cloud.ibm.com/docs/api/qiskit/qiskit.circuit.library.RZZGate).
+
+Run the bounded, deterministic identity-versus-shared-fixed-ZZ control with
+`python -m quantum_projection.control --seed 2026` from a checkout or
+`quantum-projection-control --seed 2026` after installation. It reuses each
+realized noisy query before applying the same ZZ transform to both patterns
+and queries. The expected result is invariance, not better accuracy. Its JSON
+includes paired raw differences, fixed tolerances, source hashes, package and
+runtime provenance, seeds, a diagonal readout control, and the analytic
+Hadamard-interference check. It labels all generated inputs SYNTHETIC and the
+method classical statevector emulation; there is no hardware or advantage
+claim.
+
+The bounded run in this repository used seed 2026 and 36 paired cases (three
+stored patterns, 12 queries per pattern; \(\sigma=0.2\), \(\theta=0.73\)).
+At absolute tolerance \(10^{-12}\), the observed maximum complex-overlap,
+normalized-weight, and pattern-fidelity differences were respectively
+\(2.327\times10^{-16}\), \(2.221\times10^{-16}\), and
+\(3.331\times10^{-16}\); all 36 winners were preserved away from ties and no
+ties were excluded. The phase-only computational-readout probability
+difference was 0, and the Hadamard-interference amplitude error was
+\(3.331\times10^{-16}\). These are checks of numerical invariance, not a
+recognition or accuracy improvement.
+
+### Validation record
+
+Measured locally on Python 3.12.3,
+`Linux-7.0.0-1017-azure-x86_64-with-glibc2.39`, package version 0.1.0:
+
+```bash
+python -W error -m pytest -q
+python -W error -m quantum_projection.control --seed 2026
+python -m quantum_projection --seeds 20
+python -m pip install --no-deps .
+quantum-projection-control --seed 2026
+```
+
+The full suite passed **103 tests**. The decomposition comparison covered
+**3,018 cases** and its measured maximum amplitude error was 0 (tolerance
+\(10^{-12}\)). The four special-angle matrix maximum errors for angles
+\(0,\pi,2\pi,4\pi\) were respectively 0,
+\(6.123\times10^{-17}\), \(1.225\times10^{-16}\), and
+\(2.450\times10^{-16}\), all below \(10^{-12}\). The bounded 36-case control
+passed both from the checkout and from the installed package; the latter
+reported `source_kind: installed_package`. Identity-vs-ZZ paired maximum
+errors and zero mismatches are given above. Existing sweep tables and their
+historical results were not changed.
+
+No CI matrix result is claimed here: the latest PR workflow run (#10) reported
+`action_required` with zero jobs and no failed-job logs; earlier PR runs were
+also gated this way.
+The configured Python 3.10, 3.11, and 3.13 jobs have not been independently
+run in this environment. No hardware/QPU job, paid service, model download,
+large sweep, performance benchmark, or input-dependent feature-map accuracy
+search was run. There is no hardware, speedup, or advantage result.
+
+The focused tests independently compare direct ZZ against CNOT–RZ–CNOT on
+3,018 cases covering every ordered distinct pair in 2–6 qubits, all
+computational basis states, and seeded random states. They also check
+asymmetric CNOT bit-index behavior, special-angle matrices, inverse and
+composition, probabilities, no-free-improvement through `HolographicMembrane`,
+recall equivariance, ties, zero overlaps, and invalid inputs.
 
 ## Measured in this repo
 
@@ -90,6 +169,19 @@ Iterating erases the distinction: for noisy |00⟩ at σ = 0.25, 25-step recall 
 - `project()` never rejects a probe. A state outside the stored span is still assigned to some pattern; check the overlap magnitudes.
 - Coarse-graining is lossy by construction, and its cost depends on the states in use.
 - Amplitude encoding is one choice of map. See [DESIGN.md](DESIGN.md).
+- Applying one fixed unitary to both stored patterns and queries cannot improve
+  their overlaps or normalized recognition weights. The corresponding recall
+  transformation is equivariant; see [DESIGN.md](DESIGN.md).
+- An input-dependent ZZ feature-map comparison is only a possible later
+  exploratory study, not run or claimed here. Its protocol, controls, and
+  equal-budget comparison requirements are in
+  [EXPLORATORY_PROTOCOL.md](EXPLORATORY_PROTOCOL.md).
+
+## References for quantum feature maps
+
+- IBM, [`RZZGate` reference](https://quantum.cloud.ibm.com/docs/api/qiskit/qiskit.circuit.library.RZZGate): gate definition and matrix.
+- Havlíček et al., “Supervised learning with quantum-enhanced feature spaces,” *Nature* (2019), [doi:10.1038/s41586-019-0980-2](https://doi.org/10.1038/s41586-019-0980-2). This paper presents selected supervised-learning demonstrations; it is not evidence of a general advantage or a result from this package.
+- Thanasilp et al., “Exponential concentration in quantum kernel methods,” *Nature Communications* (2024), [doi:10.1038/s41467-024-49287-w](https://doi.org/10.1038/s41467-024-49287-w). This paper analyzes concentration in quantum kernels under the settings studied; it does not predict this package's performance.
 
 ## Provenance
 

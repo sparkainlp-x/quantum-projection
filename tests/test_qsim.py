@@ -1,4 +1,5 @@
 import math
+from decimal import Decimal
 
 import pytest
 
@@ -128,10 +129,13 @@ def test_rzz_interference_after_hadamards():
 
 
 @pytest.mark.parametrize("theta", [True, False, "0.5", float("nan"),
-                                   float("inf"), -float("inf"), 10 ** 400])
-def test_rz_rejects_invalid_angles(theta):
+                                   float("inf"), -float("inf"), Decimal("NaN"),
+                                   Decimal("Infinity"), 10 ** 400])
+def test_rz_and_rzz_reject_invalid_angles(theta):
     with pytest.raises(ValueError):
         rz(theta)
+    with pytest.raises(ValueError):
+        apply_rzz(zero(2), 0, 1, theta)
 
 
 @pytest.mark.parametrize("state", [[], [1, 2, 3], [1, float("nan"), 0, 0],
@@ -158,6 +162,21 @@ def test_rzz_accepts_unnormalized_vectors_without_mutating_them():
         sum(abs(c) ** 2 for c in state), abs=1e-12
     )
     assert rotated != state
+
+
+def test_rz_accepts_finite_decimal_angles():
+    decimal_matrix, float_matrix = rz(Decimal("0.5")), rz(0.5)
+    assert max(abs(decimal_matrix[row][column] - float_matrix[row][column])
+               for row in range(2) for column in range(2)) < 1e-12
+    assert apply_rzz([Decimal(1), Decimal(0), Decimal(0), Decimal(1)],
+                     0, 1, Decimal("0.5")) == pytest.approx(
+                         apply_rzz([1, 0, 0, 1], 0, 1, 0.5), abs=1e-12
+                     )
+
+
+def test_rzz_rejects_non_vector_input():
+    with pytest.raises(ValueError):
+        apply_rzz(None, 0, 1, 0.2)
 
 
 def test_named_states():

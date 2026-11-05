@@ -217,8 +217,13 @@ def main(argv=None):
                      "outputs strict JSON.")
     )
     parser.add_argument("--seed", type=int, default=2026)
-    args = parser.parse_args(argv)
-    result = run_control(args.seed, command=sys.argv)
+    arguments = sys.argv[1:] if argv is None else list(argv)
+    args = parser.parse_args(arguments)
+    if argv is None and Path(sys.argv[0]).name == "control.py":
+        command = ["python", "-m", "quantum_projection.control", *arguments]
+    else:
+        command = ["quantum-projection-control", *arguments]
+    result = run_control(args.seed, command=command)
     print(json.dumps(result, indent=2, allow_nan=False))
     return 0 if result["status"] == "PASS" else 1
 

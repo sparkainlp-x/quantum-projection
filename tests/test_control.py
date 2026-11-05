@@ -29,6 +29,8 @@ def test_control_cli_emits_strict_json(capsys):
         ValueError(f"invalid JSON number {value}")
     ))
     assert result["status"] == "PASS"
-    assert result["provenance"]["command"]
+    assert result["provenance"]["command"] == [
+        "quantum-projection-control", "--seed", "31"
+    ]
     assert result["diagonal_readout_control"]["max_probability_difference"] <= 1e-12
     assert result["interference_control"]["max_amplitude_difference"] <= 1e-12

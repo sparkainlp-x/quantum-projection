@@ -9,6 +9,7 @@ import cmath
 import math
 import numbers
 import random
+from decimal import Decimal
 
 SQRT1_2 = 1.0 / math.sqrt(2.0)
 
@@ -32,9 +33,13 @@ def _check_qubit(state, q):
 
 def _check_finite_statevector(state):
     """Validate a finite numeric vector with a power-of-two dimension."""
-    _num_qubits(state)
     try:
-        valid = all(not isinstance(c, bool) and isinstance(c, numbers.Number)
+        _num_qubits(state)
+    except (TypeError, AttributeError):
+        raise ValueError("statevector length must be a power of two") from None
+    try:
+        valid = all(not isinstance(c, bool)
+                    and (isinstance(c, numbers.Number) or isinstance(c, Decimal))
                     and cmath.isfinite(complex(c)) for c in state)
     except (OverflowError, TypeError, ValueError):
         valid = False
@@ -44,17 +49,19 @@ def _check_finite_statevector(state):
 
 def _check_angle(theta):
     try:
-        valid = (not isinstance(theta, bool) and isinstance(theta, numbers.Real)
-                 and math.isfinite(theta))
+        numeric = isinstance(theta, numbers.Real) or isinstance(theta, Decimal)
+        value = float(theta) if numeric and not isinstance(theta, bool) else math.nan
+        valid = not isinstance(theta, bool) and numeric and math.isfinite(value)
     except (OverflowError, TypeError, ValueError):
-        valid = False
-    if not valid:
+        value = math.nan
+    if not math.isfinite(value):
         raise ValueError("angle must be a finite real number")
+    return value
 
 
 def rz(theta):
     """Return RZ(theta) = diag(exp(-i theta/2), exp(i theta/2))."""
-    _check_angle(theta)
+    theta = _check_angle(theta)
     return ((cmath.exp(-0.5j * theta), 0j),
             (0j, cmath.exp(0.5j * theta)))
 
@@ -138,12 +145,14 @@ def apply_rzz(state, q0, q1, theta):
     _check_qubit(state, q1)
     if q0 == q1:
         raise ValueError("qubits must differ")
-    _check_angle(theta)
+    theta = _check_angle(theta)
     equal_phase = cmath.exp(-0.5j * theta)
     unequal_phase = cmath.exp(0.5j * theta)
     return [
-        amplitude * (equal_phase if ((index >> q0) & 1) == ((index >> q1) & 1)
-                     else unequal_phase)
+        complex(amplitude) * (
+            equal_phase if ((index >> q0) & 1) == ((index >> q1) & 1)
+            else unequal_phase
+        )
         for index, amplitude in enumerate(state)
     ]
 
