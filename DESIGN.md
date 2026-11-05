@@ -10,6 +10,51 @@ SYNTHETIC. Classical emulation of quantum kinematics only. No speedup, no Bell v
 4. **Recall.** a ← Wa/‖Wa‖. This is a projection onto the stored subspace, not a collapse onto one pattern (see below).
 5. **Ket/bra split.** One array holds kets, the other their complex conjugates. Multiplying a probe by the conjugates without conjugating again is the ordinary inner product written a second way. It agrees with step 3 up to rounding by construction; it is not an independent check.
 
+## Statevector order and ZZ rotations
+
+The statevector entry at integer index \(k\) is the amplitude of
+\(|q_{n-1}\ldots q_1q_0\rangle\), where bit \(q\) is
+\((k \mathbin{\gg} q)\mathbin{\&}1\). Thus qubit 0 is the least-significant
+bit and the rightmost tensor factor. For example, the two-qubit vector order is
+\((|00\rangle, |01\rangle, |10\rangle, |11\rangle)\), with qubit 0 on the
+right.
+
+`rz(theta)` returns
+\(\operatorname{diag}(e^{-i\theta/2},e^{+i\theta/2})\). `apply_rzz(state,
+q0, q1, theta)` applies
+\[
+RZZ(\theta)=e^{-i\theta(Z\otimes Z)/2}.
+\]
+It multiplies an amplitude by \(e^{-i\theta/2}\) when the selected bits are
+equal and \(e^{+i\theta/2}\) when they differ. This agrees with the matrix
+definition in [IBM's RZZGate reference](https://quantum.cloud.ibm.com/docs/api/qiskit/qiskit.circuit.library.RZZGate).
+The direct statevector operation checks for a finite real angle, distinct
+integer qubit indices, and a finite numeric vector of power-of-two length. It
+rejects boolean/string angles, does not mutate or normalize its input, and
+accepts unnormalized finite vectors as ordinary linear-algebra inputs.
+
+The fixed shared-unitary control has a no-free-improvement invariant. If the
+same unitary \(U\) is applied to every normalized stored pattern and query,
+\(\langle Up^\mu|Uq\rangle=\langle p^\mu|q\rangle\); complex overlaps,
+fidelities, normalized recognition weights, and non-tied winners are
+unchanged. With transformed patterns,
+\[
+W'=\sum_\mu |Up^\mu\rangle\langle Up^\mu|=U W U^\dagger.
+\]
+Consequently, recall of \(Uq\) under \(W'\) follows the \(U\)-transformed
+trajectory of recall of \(q\) under \(W\), with the same winners away from
+numerical ties. This is equivariance, not a recognition gain. A diagonal ZZ
+layer alone also preserves computational-basis probabilities; interference
+with later gates can convert the phases into different readout probabilities.
+
+Exact amplitude equality is kept distinct from equivalence up to global
+phase: for example, \(RZZ(2\pi)=-I\), so the output amplitudes are the
+negatives of the input even though the physical pure state is equivalent.
+The existing first-maximum convention remains in force: exact winner ties
+select the first pattern. A query orthogonal to every stored pattern keeps
+all-zero weights and also reports winner 0; `recall` still raises for such a
+query.
+
 ## What recall does
 
 - **Orthonormal patterns.** W is an orthogonal projector (W² = W). Recall reaches its fixed point P_S ψ/‖P_S ψ‖ after one step and further steps change nothing (measured gap between 1 and 25 steps: below 1e-15). The recalled fidelity to pattern μ equals its Born weight exactly (measured gap below 1e-15). The result keeps every stored component; nothing snaps to a single outcome.
@@ -25,6 +70,16 @@ SYNTHETIC. Classical emulation of quantum kinematics only. No speedup, no Bell v
 - **No nonlocality.** All correlations are classical numbers in one array. A Bell state stored here does not and cannot violate a Bell inequality.
 - **No rejection.** `project()` always names a winner. Probes outside the stored span (Psi− against {Φ+, Φ−, Ψ+}) are still assigned, effectively at random under noise. Check the overlap magnitudes before trusting a winner.
 - **The map is a choice.** Amplitude encoding is one choice among several (phase-only, unary, coherent-state lattices). This package measures one map.
+
+No experiment in this repository is a test of quantum advantage. The possible
+input-dependent ZZ study is described as exploratory in
+[`EXPLORATORY_PROTOCOL.md`](EXPLORATORY_PROTOCOL.md); it has not been run.
+Relevant prior work has distinct scopes: Havlíček et al. introduced and
+demonstrated quantum-enhanced feature spaces for selected supervised-learning
+tasks ([Nature, 2019](https://doi.org/10.1038/s41586-019-0980-2)), while
+Thanasilp et al. analyzed exponential concentration in quantum kernel methods
+under their studied settings ([Nature Communications, 2024](https://doi.org/10.1038/s41467-024-49287-w)).
+Neither establishes a performance result for this classical emulator.
 
 ## Notes from the original draft
 

@@ -28,3 +28,5 @@ jobs:
         run: |
           python -W error -m quantum_projection
           quantum-projection --seeds 20
+      - name: Paired ZZ invariance control (strict JSON)
+        run: quantum-projection-control --seed 2026

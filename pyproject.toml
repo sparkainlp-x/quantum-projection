@@ -14,6 +14,7 @@ dependencies = []
 
 [project.scripts]
 quantum-projection = "quantum_projection.__main__:main"
+quantum-projection-control = "quantum_projection.control:main"
 
 [tool.setuptools]
 packages = ["quantum_projection"]

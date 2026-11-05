@@ -6,7 +6,8 @@ from quantum_projection import (HolographicMembrane, KetBraPair, coarse_grain,
                                 fidelity, ghz, noisy, normalize, random_state,
                                 w_state, zero)
 from quantum_projection.qsim import (H, apply_1q, basis, bell_phi_minus,
-                                     bell_phi_plus, bell_psi_plus, inner)
+                                     apply_rzz, bell_phi_plus, bell_psi_plus,
+                                     inner)
 
 BELL3 = [bell_phi_plus(), bell_phi_minus(), bell_psi_plus()]
 
@@ -122,4 +123,67 @@ def test_input_validation():
 def test_orthogonal_probe_gets_zero_weights():
     r = HolographicMembrane([zero(2)]).project(basis(2, 3))
     assert r["probs"] == [0.0]
+    assert r["winner"] == 0
     assert abs(inner(zero(2), basis(2, 3))) == 0
+
+
+def test_membrane_shared_unitary_preserves_overlaps_weights_and_winners():
+    patterns = [random_state(3, seed) for seed in (14, 27, 38)]
+    probes = [random_state(3, seed) for seed in range(40, 50)]
+    membrane = HolographicMembrane(patterns)
+    transformed_membrane = HolographicMembrane(
+        [apply_rzz(pattern, 0, 2, 0.63) for pattern in patterns]
+    )
+    max_overlap_error = max_weight_error = max_fidelity_error = 0.0
+    for probe in probes:
+        original = membrane.project(probe)
+        transformed = transformed_membrane.project(apply_rzz(probe, 0, 2, 0.63))
+        max_overlap_error = max(
+            max_overlap_error,
+            max(abs(a - b) for a, b in zip(original["overlaps"], transformed["overlaps"]))
+        )
+        max_weight_error = max(
+            max_weight_error,
+            max(abs(a - b) for a, b in zip(original["probs"], transformed["probs"]))
+        )
+        max_fidelity_error = max(
+            max_fidelity_error,
+            max(abs(fidelity(p, probe) -
+                    fidelity(tp, apply_rzz(probe, 0, 2, 0.63)))
+                for p, tp in zip(membrane.patterns, transformed_membrane.patterns))
+        )
+        ordered = sorted((abs(value) for value in original["overlaps"]), reverse=True)
+        assert ordered[0] - ordered[1] > 1e-12
+        assert original["winner"] == transformed["winner"]
+    assert max_overlap_error < 1e-12, (
+        f"maximum complex-overlap error={max_overlap_error:.3e}"
+    )
+    assert max_weight_error < 1e-12, f"maximum weight error={max_weight_error:.3e}"
+    assert max_fidelity_error < 1e-12, (
+        f"maximum pattern-fidelity error={max_fidelity_error:.3e}"
+    )
+
+
+def test_recall_is_equivariant_under_shared_unitary_conjugation():
+    patterns = [zero(2), normalize([1, 1j, 1, 0])]
+    probe = normalize([1, 2j, -1, 3])
+    unitary = lambda state: apply_rzz(state, 0, 1, 0.47)
+    membrane = HolographicMembrane(patterns)
+    transformed_membrane = HolographicMembrane([unitary(p) for p in patterns])
+    for steps in range(1, 5):
+        state, winner, trajectory = membrane.recall(probe, steps=steps)
+        transformed, transformed_winner, transformed_trajectory = (
+            transformed_membrane.recall(unitary(probe), steps=steps)
+        )
+        expected = unitary(state)
+        error = max(abs(a - b) for a, b in zip(transformed, expected))
+        assert error < 1e-12, f"steps={steps}, max trajectory-state error={error:.3e}"
+        assert winner == transformed_winner
+        assert trajectory == transformed_trajectory
+
+
+def test_project_ties_keep_first_pattern():
+    probe = normalize([1, 0, 0, 1])
+    result = HolographicMembrane([basis(2, 0), basis(2, 3)]).project(probe)
+    assert result["probs"] == pytest.approx([0.5, 0.5], abs=1e-12)
+    assert result["winner"] == 0
