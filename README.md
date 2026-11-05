@@ -98,7 +98,7 @@ reported `source_kind: installed_package`. Identity-vs-ZZ paired maximum
 errors and zero mismatches are given above. Existing sweep tables and their
 historical results were not changed.
 
-No CI matrix result is claimed here: the latest PR workflow run (#10) reported
+No CI matrix result is claimed here: the latest PR workflow run (#11) reported
 `action_required` with zero jobs and no failed-job logs; earlier PR runs were
 also gated this way.
 The configured Python 3.10, 3.11, and 3.13 jobs have not been independently
