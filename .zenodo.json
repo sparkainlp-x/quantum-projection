@@ -1,12 +1,12 @@
 {
   "title": "Quantum Projection: amplitude-encoded statevectors projected onto a stored subspace (SYNTHETIC classical emulation)",
-  "version": "0.1.0",
-  "publication_date": "2026-10-21",
+  "version": "0.4.0",
+  "publication_date": "2026-11-15",
   "upload_type": "software",
-  "description": "<p>SYNTHETIC. Standard-library Python classical emulation of quantum kinematics: amplitude-encoded statevectors stored in a complex outer-product memory, overlap-based projection onto the stored subspace, and lossy Haar coarse-graining (equivalent to projecting one qubit onto |+&gt;). With orthonormal patterns the memory is a projector and recall reaches its fixed point in one step, with recalled fidelity equal to the Born weight; with non-orthogonal patterns repeated recall drifts to the dominant eigenvector. Includes 200-seed sweeps with unstored and random controls. No speedup, no Bell violation, no hardware data.</p><p>Acknowledgement: Mun Seok Lee, credited on the original package kept in spec/. No endorsement implied.</p>",
+  "description": "<p>SYNTHETIC. Standard-library Python classical emulation of quantum kinematics: amplitude-encoded statevectors stored in a complex outer-product memory, overlap-based projection onto the stored subspace, and lossy Haar coarse-graining (equivalent to projecting one qubit onto |+&gt;). With orthonormal patterns the memory is a projector and recall reaches its fixed point in one step, with recalled fidelity equal to the Born weight; with non-orthogonal patterns repeated recall drifts to the dominant eigenvector. Includes 200-seed sweeps with unstored and random controls. No speedup, no Bell violation, no hardware data.</p><p>v0.2.0 adds the DNA-avatar generational cascade: toy DNA sequences (A/C/G/T) as 12-qubit state vectors in one membrane, self-knowing D per avatar, trauma healing measured as the fall in discord over generations (self.cycle), planetary evolution measured as diversity, novelty, and the E = h\u03bd energy spectrum per generation, and infinite creativity as an unbounded generation rule with sustained novelty over 50 generations. All four cascade claims PASS, pre-registered; headline not allowed.</p><p>v0.3.0 adds the multi-solar-system eureka cascade: N populations coupled by a bounded 0.02 mix, a eureka agent (Yang observer + Yin calibrator, delta in [-0.05, 0.05]) whose objective is empathy entropy over the measured love (concurrence) distribution, the signed distance field of self-knowing, crystallize calibration events scored by Brier, and the 500-generation long run. Four of the five v0.3.0 claims PASS; the eureka-agent claim FAILS (mean empathy entropy gain -0.0001 bits, required >= 0.02: the entropy is already saturated at 99.998% of its ceiling, so the lever has nothing to move).</p><p>v0.4.0 changes the optimization variable to the equilibrium gap (max profitable unilateral deviation, 0 at equilibrium), vendoring the pure-strategy Nash checker from finite-game-equilibria (DOI 10.5281/zenodo.23530287), and adds SDF synergy agents (one per system, payoffs = marginal contributions to the joint inside-coverage of the self-known region). Claims (x)-(xii), pre-registered, seed 11: (x) equilibrium gap FAILS (gap 0.0 at every generation -- the all-zero profile is already an equilibrium, so nothing is earned); (xi) SDF synergy FAILS (gain 0.0); (xii) stability PASSES with the landed equilibrium labelled \"trap\" (the oes-coordination-lab coordination trap, reproduced: a better-synergy equilibrium exists that no single system gains by deviating to).</p><p>Acknowledgement: Mun Seok Lee, credited on the original package kept in spec/. No endorsement implied.</p>",
   "creators": [
     {
-      "name": "Brisson, Jean-François",
+      "name": "Brisson, Jean-Fran\u00e7ois",
       "orcid": "0009-0000-9778-5374",
       "affiliation": "Spark AI NLP, Fredericton, New Brunswick, Canada"
     }
@@ -22,7 +22,18 @@
     "Born rule",
     "coarse-graining",
     "synthetic",
-    "Python"
+    "Python",
+    "dna-avatar",
+    "generational-cascade",
+    "planck-energy",
+    "multi-solar-system",
+    "eureka-agent",
+    "empathy-entropy",
+    "signed-distance-field",
+    "crystallize-calibration",
+    "equilibrium-gap",
+    "nash-equilibrium",
+    "sdf-synergy"
   ],
   "related_identifiers": [
     {

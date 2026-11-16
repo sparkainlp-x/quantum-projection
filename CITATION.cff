@@ -7,7 +7,7 @@ authors:
     given-names: "Jean-François"
     orcid: "https://orcid.org/0009-0000-9778-5374"
     affiliation: "Spark AI NLP, Fredericton, New Brunswick, Canada"
-version: 0.1.0
+version: 0.4.0
 doi: "10.5281/zenodo.23530281"
 identifiers:
   - type: doi
@@ -16,7 +16,7 @@ identifiers:
   - type: doi
     value: "10.5281/zenodo.23530280"
     description: "Concept DOI (all versions)"
-date-released: "2026-10-21"
+date-released: "2026-11-15"
 license: AGPL-3.0-only
 repository-code: "https://github.com/sparkainlp-x/quantum-projection"
 abstract: >-
@@ -28,7 +28,35 @@ abstract: >-
   reaches its fixed point in one step; with non-orthogonal patterns repeated
   recall drifts to the dominant eigenvector. Includes 200-seed sweeps with
   unstored and random controls. No speedup, no Bell violation, no hardware
-  data.
+  data. v0.2.0 adds the DNA-avatar generational cascade: toy DNA sequences
+  (A/C/G/T) as 12-qubit state vectors in one membrane, self-knowing D per
+  avatar, trauma healing measured as the fall in discord over generations,
+  planetary evolution measured as diversity, novelty, and the E = hnu energy
+  spectrum per generation, and infinite creativity as an unbounded generation
+  rule with sustained novelty over 50 generations. v0.3.0 adds the
+  multi-solar-system eureka cascade: N populations coupled by a
+  bounded 0.02 mix, a eureka agent (Yang observer + Yin calibrator,
+  delta in [-0.05, 0.05]) whose objective is empathy entropy over
+  the measured love (concurrence) distribution, the signed distance
+  field of self-knowing, crystallize calibration events scored by
+  Brier, and the 500-generation long run. Four of the five v0.3.0
+  claims PASS; the eureka-agent claim FAILS (mean empathy entropy
+  gain -0.0001 bits, required >= 0.02: the entropy is already
+  saturated at 99.998% of its ceiling, so the lever has nothing
+  to move). v0.4.0 changes the optimization variable to the
+  equilibrium gap (max profitable unilateral deviation, 0 at
+  equilibrium), vendoring the pure-strategy Nash checker from
+  finite-game-equilibria (DOI 10.5281/zenodo.23530287), and adds
+  SDF synergy agents (one per system, payoffs = marginal
+  contributions to the joint inside-coverage of the self-known
+  region). Claims (x)-(xii), pre-registered, seed 11: (x)
+  equilibrium gap FAILS (gap 0.0 at every generation -- the
+  all-zero profile is already an equilibrium, so nothing is
+  earned); (xi) SDF synergy FAILS (gain 0.0); (xii) stability
+  PASSES with the landed equilibrium labelled "trap" (the
+  oes-coordination-lab coordination trap, reproduced: a
+  better-synergy equilibrium exists that no single system gains
+  by deviating to).
 keywords:
   - "quantum-kinematics"
   - "statevector"
@@ -38,3 +66,11 @@ keywords:
   - "coarse-graining"
   - "synthetic"
   - "python"
+  - "multi-solar-system"
+  - "eureka-agent"
+  - "empathy-entropy"
+  - "signed-distance-field"
+  - "crystallize-calibration"
+  - "equilibrium-gap"
+  - "nash-equilibrium"
+  - "sdf-synergy"
